@@ -1,1 +1,52 @@
+#note, there are a LOT of variables you need to change
+import requests
+import smtplib
+from email.message import EmailMessage
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
+base_url = 'https://www.reddit.com/'
+data = {'grant_type': 'password', 'username': 'Your Reddit username', 'password': 'Your Reddit password'}
+auth = requests.auth.HTTPBasicAuth('Your Given App ID', 'Your given app secret')
+r = requests.post(base_url + 'api/v1/access_token',
+                  data=data,
+                  headers={'user-agent': 'Your App Name by Your Reddit Username'},
+                  auth=auth)
+d = r.json()
+
+token = 'bearer ' + d['access_token']
+
+base_url = 'https://oauth.reddit.com'
+
+headers = {'Authorization': token, 'User-Agent': 'Your App Name by Your Reddit Username'}
+response = requests.get(base_url + '/api/v1/me', headers=headers)
+
+funny = {'sort': 'rising', 'nsfw':'false', 'over_18':'false'} #sets params 
+reddit = requests.get(base_url + '/r/random', headers=headers, params = funny)
+m = str(reddit.json()['data']['children'][1]['data']['url'])
+
+YOUR_GOOGLE_EMAIL = 'Your google Email'  # The email you setup to send the email using app password
+YOUR_GOOGLE_EMAIL_APP_PASSWORD = 'Your google password'  # The app password you generated
+
+smtpserver = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+smtpserver.ehlo()
+smtpserver.login(YOUR_GOOGLE_EMAIL, YOUR_GOOGLE_EMAIL_APP_PASSWORD)
+
+
+msg = EmailMessage()
+
+msg['Subject'] = "Your desired Subject"
+msg['From'] = 'Your google Email'
+
+# Use a list of email addresses for multiple recipients
+to_emails = ['emails you want to include']
+msg['To'] = ', '.join(to_emails)
+
+msg.set_content(m)
+
+smtpserver.send_message(msg)
+
+# Close the connection
+smtpserver.close()
+
+print(m) # the url
