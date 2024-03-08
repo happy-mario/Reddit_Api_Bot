@@ -1,2 +1,3 @@
 # Reddit_Api_Bot
-My reddit tool, and it works! Sends a random reddit thread to specified people every day at a certain time.
+My reddit tool, and it works! Sends a random reddit thread to specified people every day at a certain time. (its 100% free btw)
+You need to make a dev account on reddit(see https://www.reddit.com/wiki/api/), you need to folow the instructions on this website: https://alpscode.com/blog/how-to-use-reddit-api/ , to make your api key,  you shoud look at https://docs.python.org/3/library/smtplib.html#smtplib.SMTP.sendmail for stplib documentation, and most importantly see https://crontab.guru/tips.html for help setting up your cron job
